@@ -1,65 +1,73 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    const response = await fetch('https://restcountries.com/v3.1/all');
-    const countries = await response.json();
+var API = "https://restcountries.com/v3.1/all";
 
-    const countriesDiv = document.getElementById('countries');
 
-    countries.forEach(country => {
-        const countryDiv = document.createElement('div');
-        countryDiv.className = 'col-lg-4 col-sm-12';
+var fet = fetch(API)
+  .then((response) => response.json())
+  .then((data) => {
+    
+    data.map((value) => {
+      var spreadOperator = {
+        ...value,
+        name: value.name.common,
+        flag: value.flags.png,
+        code: value.cioc,
+        capital: value.capital,
+        region: value.region,
+        population: value.population,
+        latitude: value.latlng[0],
+        longitude: value.latlng[1]
 
-        const card = document.createElement('div');
-        card.className = 'card';
+      };
+      createcountry(spreadOperator);
+      
+      
+     
+        // console.log(value)
+    })
+  })
+  
+  
+   
+function createcountry({ name, flag, code, capital, region, population,latitude,longitude }) {
+   
+  document.body.innerHTML += 
+  ` <div class="container">
+    <div class="card"  >
+    <h1 id="title" class="text-center">${name}</h1>
+    <img src="${flag}" class="flag" alt="${name}'Flag image">
+ 
+  <div class="card-body car" >
+  <p><span>Population :</span>${population}</p>
+  <p><span>Captial :</span> ${capital}</p>
+  <p><span>Region :</span> ${region}</p>
+  <p><span>Country Code :</span>${code}</p>
+  <a href="#" class="btn btn-primary" onclick=(block(${latitude},${longitude},${name})) >Click for Weather</a>
+ <div id=${name}>   </div>
+  
+ 
+  </div>
+</div>
+</div>
+`
+}
 
-        const cardHeader = document.createElement('div');
-        cardHeader.className = 'card-header';
-        cardHeader.textContent = country.name.common;
 
-        const cardBody = document.createElement('div');
-        cardBody.className = 'card-body';
 
-        const capital = document.createElement('p');
-        capital.textContent = `Capital: ${country.capital}`;
+function block(lat,lng,name){
 
-        const region = document.createElement('p');
-        region.textContent = `Region: ${country.region}`;
+  var WAPI = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=f50d991e372632b3b193a1f32a46bbb8`
+   
+  console.log(name)
+ fetch(WAPI)
+ .then((response) => response.json())
+ .then((data)=> {
 
-        const latlng = document.createElement('p');
-        latlng.textContent = `Latitude/Longitude: ${country.latlng[0]}, ${country.latlng[1]}`;
-
-        const name = document.createElement('p');
-        name.textContent = `Name: ${country.name.common} (${country.name.official})`;
-
-        const flag = document.createElement('img');
-        flag.src = country.flags.svg;
-        flag.alt = 'Flag';
-
-        const countryCodes = document.createElement('p');
-        countryCodes.textContent = `Country Codes: ${country.cca2}, ${country.cca3}`;
-
-        const weatherButton = document.createElement('button');
-        weatherButton.className = 'btn btn-primary';
-        weatherButton.textContent = 'Click for weather';
-        weatherButton.addEventListener('click', async () => {
-            const weatherResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${country.latlng[0]}&lon=${country.latlng[1]}&appid=f50d991e372632b3b193a1f32a46bbb8`);
-            const weatherData = await weatherResponse.json();
-
-            alert(`Weather in ${country.name.common}: ${weatherData.weather[0].description}`);
-        });
-
-        cardBody.appendChild(capital);
-        cardBody.appendChild(region);
-        cardBody.appendChild(latlng);
-        cardBody.appendChild(name);
-        cardBody.appendChild(flag);
-        cardBody.appendChild(countryCodes);
-        cardBody.appendChild(weatherButton);
-
-        card.appendChild(cardHeader);
-        card.appendChild(cardBody);
-
-        countryDiv.appendChild(card);
-
-        countriesDiv.appendChild(countryDiv);
-    });
-});
+     alert(`
+               For ${name.id}  
+     Current Humidity is ${data.main.humidity}
+     Current Pressure is ${data.main.pressure}
+     Current Temperature is ${data.main.temp}`)
+    })
+}
+  
+document.addEventListener("click",(event) => event.preventDefault())
