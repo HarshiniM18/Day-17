@@ -1,5 +1,5 @@
-**REST COUNTRIES AND WEATHER USING FETCH API
-**
+**REST COUNTRIES AND WEATHER USING FETCH API**
+
 This web application fetches information about countries using the restcountries API and displays them in a card format. Additionally, it provides the option to check the current weather for a selected country.
 
 **Features**
